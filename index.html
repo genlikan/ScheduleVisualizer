@@ -36,7 +36,7 @@
         var zNear = 1;
         var zFar = 10000;
         camera = new THREE.PerspectiveCamera(fov, ratio, zNear, zFar);
-        camera.position.set( 0, 0, 300);
+        camera.position.set( 0, 0, 600);
 
         renderer = new THREE.WebGLRenderer({ alpha: true });
         renderer.setSize( window.innerWidth, window.innerHeight );
@@ -62,6 +62,43 @@
 
         controls = new THREE.TrackballControls( camera, renderer.domElement );
 
+        // var cubeSize = 60;
+        // var cubeGeo = new THREE.BoxBufferGeometry(cubeSize, cubeSize, cubeSize);
+        // var cubeMat = new THREE.MeshPhongMaterial({color: '#008000'});
+        // var mesh_0 = new THREE.Mesh(cubeGeo, cubeMat);
+        // mesh_0.position.set(-60, -69, 0);
+        // scene.add(mesh_0);
+
+        // var cubeSize = 60;
+        // var cubeGeo = new THREE.BoxBufferGeometry(cubeSize, cubeSize, cubeSize);
+        // var cubeMat = new THREE.MeshPhongMaterial({color: '#0000FF'});
+        // var mesh_1 = new THREE.Mesh(cubeGeo, cubeMat);
+        // mesh_1.position.set(0, -69, 0);
+        // scene.add(mesh_1);
+
+        // var cubeSize = 60;
+        // var cubeGeo = new THREE.BoxBufferGeometry(cubeSize, cubeSize, cubeSize);
+        // var cubeMat = new THREE.MeshPhongMaterial({color: '#FF0000'});
+        // var mesh_2 = new THREE.Mesh(cubeGeo, cubeMat);
+        // mesh_2.position.set(0, -9, 0);
+        // scene.add(mesh_2);
+
+
+        
+
+        // function makecube(){
+        //     var cubeSize = 60;
+        //     var cubeGeo = new THREE.BoxBufferGeometry(cubeSize, cubeSize, cubeSize);
+        //     var cubeMat = new THREE.MeshPhongMaterial({color: '#FF0000'});
+        //     var mesh_x = new THREE.Mesh(cubeGeo, cubeMat);
+        //     mesh_x.position.set(60, -9 + currentHeight, 0);
+        //     scene.add(mesh_x);
+
+        //     currentHeight += 60
+        // }
+
+        
+
         // Gui
         //
         //
@@ -72,7 +109,78 @@
         }
         // https://workshop.chromeexperiments.com/examples/gui/#1--Basic-Usage
 
+
+
         var gui = new dat.GUI();
+
+        // Monday
+        //
+        //
+        var monday_addCube = gui.addFolder("Monday");
+
+
+        var monday_currentHeight = 0;
+        var monday_currentCube = 0;
+
+        var monday_makecube = {
+            'Make a Cube':function makecube(){
+
+            if (monday_currentHeight >= 1440) {
+                return console.log('Limit Reached');
+            };
+            var cubeSize = 60;
+            var cubeGeo = new THREE.BoxBufferGeometry(cubeSize, cubeSize, cubeSize);
+            var cubeMat = new THREE.MeshPhongMaterial({color: '#FF0000'});
+            var mesh_x = new THREE.Mesh(cubeGeo, cubeMat);
+            mesh_x.position.set(-300, -69 + monday_currentHeight, 0);
+            cubeMat.color.setHex(Math.random() * 0xffffff);
+            scene.add(mesh_x);
+
+            monday_currentHeight += 60;
+            monday_currentCube +=1;
+            console.log("Current Cube Height:" + monday_currentHeight);
+            console.log("Current Cube Count:" + monday_currentCube);
+        }
+
+        };
+
+        monday_addCube.add(monday_makecube,'Make a Cube');
+
+        // Tuesday
+        //
+        //
+        var tuesday_addCube = gui.addFolder("Tuesday");
+
+        var tuesday_currentHeight = 0;
+        var tuesday_currentCube = 0;
+
+        var tuesday_makecube = {
+            'Make a Cube':function makecube(){
+
+            if (tuesday_currentHeight >= 1440) {
+                return console.log('Limit Reached');
+            };
+            var cubeSize = 60;
+            var cubeGeo = new THREE.BoxBufferGeometry(cubeSize, cubeSize, cubeSize);
+            var cubeMat = new THREE.MeshPhongMaterial({color: '#FF0000'});
+            var mesh_x = new THREE.Mesh(cubeGeo, cubeMat);
+            mesh_x.position.set(-180, -69 + tuesday_currentHeight, 0);
+            cubeMat.color.setHex(Math.random() * 0xffffff);
+            scene.add(mesh_x);
+
+            tuesday_currentHeight += 60;
+            tuesday_currentCube +=1;
+            console.log("Current Cube Height:" + tuesday_currentHeight);
+            console.log("Current Cube Count:" + tuesday_currentCube);
+        }
+
+        };
+
+        tuesday_addCube.add(tuesday_makecube,'Make a Cube');
+
+
+        monday_addCube.open();
+        tuesday_addCube.open();
 
         // var moving = gui.addFolder( "Movement" );
 
