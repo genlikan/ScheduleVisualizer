@@ -15,7 +15,7 @@
       }
         #fake-container {
             max-width: 300px;
-            max-height: 512px;
+            max-height: 300px;
             width: 80vw;
             height: 80vw;
             margin-left: auto;
@@ -248,7 +248,7 @@
         var duration_start_Selection = '0:00';
         gui.Register({
             type: 'select',
-            label: 'Select Start Duration',
+            label: 'Select Start',
             object: this,
             property: 'duration_start_Selection',
             options: duration,
@@ -260,7 +260,7 @@
         var duration_end_Selection = '0:00';
         gui.Register({
             type: 'select',
-            label: 'Select End Duration',
+            label: 'Select End',
             object: this,
             property: 'duration_end_Selection',
             options: duration,

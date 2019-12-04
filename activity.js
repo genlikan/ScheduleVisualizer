@@ -27,7 +27,14 @@ Activity = function(Day, Activity_Description, Duration, Color) {
 
   scene.add(mesh);
 
-  this.currentHeight += 60;
+  if (this.currentHeight == null){
+    this.currentHeight += 60;
+  };
+
+  else {
+    this.currentHeight += Duration;
+  };
+  
   this.currentCube += 1;
 
   console.log("Current Cube Height:" + this.currentHeight);
