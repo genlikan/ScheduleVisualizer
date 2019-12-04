@@ -13,14 +13,31 @@
         background-repeat: no-repeat;
         background-size: 100% 100%;
       }
+        #fake-container {
+            max-width: 300px;
+            max-height: 512px;
+            width: 80vw;
+            height: 80vw;
+            margin-left: auto;
+            margin-right: auto;
+            position: absolute;
+            top:0;
+            right:0;
+        }
+
     </style>
 
+    <div id="fake-container"></div>
+
     <script src="https://threejs.org/build/three.min.js" type="text/javascript"></script>
+    <script src="https://threejs.org/examples/js/controls/OrbitControls.js" type="text/javascript"></script>
     <script src="https://threejs.org/examples/js/controls/TrackballControls.js" type="text/javascript"></script>
     <script src="https://threejs.org/examples/js/effects/AnaglyphEffect.js" type="text/javascript"></script>
-    <script src="https://threejs.org/examples/js/libs/dat.gui.min.js" type="text/javascript"></script>
+    <script src="fonts/white_smith_regular.json"></script>
 
-    <script src="robot.js"></script>
+    <script src='lib/guify.js'></script>
+
+    <script src="activity.js"></script>
 
     <script>
 
@@ -31,12 +48,15 @@
 
         scene = new THREE.Scene();
 
-        var fov = 60;
+        var fov = 80;
         var ratio = window.innerWidth / window.innerHeight;
         var zNear = 1;
         var zFar = 10000;
         camera = new THREE.PerspectiveCamera(fov, ratio, zNear, zFar);
+
+        // camera.position.set( 0, 1600, 1400);
         camera.position.set( 0, 0, 600);
+
 
         renderer = new THREE.WebGLRenderer({ alpha: true });
         renderer.setSize( window.innerWidth, window.innerHeight );
@@ -50,174 +70,79 @@
         scene.add( light );
 
         var floorTexture = new THREE.TextureLoader().load( 'marble.jpg' );
-        var floorGeometry = new THREE.PlaneBufferGeometry( 1000, 1000 );
+        var floorGeometry = new THREE.PlaneBufferGeometry( 2000, 1000 );
         var floorMaterial = new THREE.MeshBasicMaterial( {
           map: floorTexture,
           side: THREE.DoubleSide
         } );
         floor = new THREE.Mesh( floorGeometry, floorMaterial );
+        floor.position.x = 60;
         floor.position.y = -100;
         floor.rotateX(Math.PI/2);
         scene.add( floor );
 
-        controls = new THREE.TrackballControls( camera, renderer.domElement );
+        controls = new THREE.OrbitControls( camera, renderer.domElement );
+        // controls = new THREE.TrackballControls( camera, renderer.domElement );
+        controls.rotateSpeed = 1;
 
-        // var cubeSize = 60;
-        // var cubeGeo = new THREE.BoxBufferGeometry(cubeSize, cubeSize, cubeSize);
-        // var cubeMat = new THREE.MeshPhongMaterial({color: '#008000'});
-        // var mesh_0 = new THREE.Mesh(cubeGeo, cubeMat);
-        // mesh_0.position.set(-60, -69, 0);
-        // scene.add(mesh_0);
+        var initial_text_pos = [-800, -69, 100];
 
-        // var cubeSize = 60;
-        // var cubeGeo = new THREE.BoxBufferGeometry(cubeSize, cubeSize, cubeSize);
-        // var cubeMat = new THREE.MeshPhongMaterial({color: '#0000FF'});
-        // var mesh_1 = new THREE.Mesh(cubeGeo, cubeMat);
-        // mesh_1.position.set(0, -69, 0);
-        // scene.add(mesh_1);
+        var days = [0,1,2,3,4,5,6];
 
-        // var cubeSize = 60;
-        // var cubeGeo = new THREE.BoxBufferGeometry(cubeSize, cubeSize, cubeSize);
-        // var cubeMat = new THREE.MeshPhongMaterial({color: '#FF0000'});
-        // var mesh_2 = new THREE.Mesh(cubeGeo, cubeMat);
-        // mesh_2.position.set(0, -9, 0);
-        // scene.add(mesh_2);
+        var days_name = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
 
+        var loader = new THREE.FontLoader();
+        loader.load( 'fonts/White_Smith_Regular.json', function ( font ) {
 
-        
+        for (var i = 0; i < days_name.length; i++) {
 
-        // function makecube(){
-        //     var cubeSize = 60;
-        //     var cubeGeo = new THREE.BoxBufferGeometry(cubeSize, cubeSize, cubeSize);
-        //     var cubeMat = new THREE.MeshPhongMaterial({color: '#FF0000'});
-        //     var mesh_x = new THREE.Mesh(cubeGeo, cubeMat);
-        //     mesh_x.position.set(60, -9 + currentHeight, 0);
-        //     scene.add(mesh_x);
+          var monday_Text = new THREE.TextGeometry( days_name[i] , {
 
-        //     currentHeight += 60
-        // }
+            font: font,
+            size: 40,
+            height: 10,
+            curveSegments: 12,
+            bevelThickness: 1,
+            bevelSize: 1,
+            bevelEnabled: true
 
-        
+          });
 
-        // Gui
-        //
-        //
-        //
+          var textMaterial = new THREE.MeshPhongMaterial( 
+            { color: 0x010047, specular: 0xffffff }
+          );
 
-        var input_text = function(){
-            this.message
-        }
-        // https://workshop.chromeexperiments.com/examples/gui/#1--Basic-Usage
+          // RANDOM TEXT COLOR
+          // var textMaterial = new THREE.MeshPhongMaterial( 
+          //   { color: '#'+Math.floor(Math.random()*16777215).toString(16), specular: 0xffffff }
+          // );
 
+          var mesh = new THREE.Mesh( monday_Text, textMaterial );
+          mesh.position.set(initial_text_pos[0]+250*i , initial_text_pos[1] , initial_text_pos[2] );
+          mesh.rotation.x = 100;
+          scene.add( mesh );
 
+          };
 
-        var gui = new dat.GUI();
+        });
 
-        // Monday
-        //
-        //
-        var monday_addCube = gui.addFolder("Monday");
+        var day_pos = [-710, -460, -210, 40, 290, 540, 790];
 
+        for (var i = 0; i < day_pos.length; i++) {
 
-        var monday_currentHeight = 0;
-        var monday_currentCube = 0;
-
-        var monday_makecube = {
-            'Make a Cube':function makecube(){
-
-            if (monday_currentHeight >= 1440) {
-                return console.log('Limit Reached');
-            };
-            var cubeSize = 60;
-            var cubeGeo = new THREE.BoxBufferGeometry(cubeSize, cubeSize, cubeSize);
-            var cubeMat = new THREE.MeshPhongMaterial({color: '#FF0000'});
-            var mesh_x = new THREE.Mesh(cubeGeo, cubeMat);
-            mesh_x.position.set(-300, -69 + monday_currentHeight, 0);
-            cubeMat.color.setHex(Math.random() * 0xffffff);
-            scene.add(mesh_x);
-
-            monday_currentHeight += 60;
-            monday_currentCube +=1;
-            console.log("Current Cube Height:" + monday_currentHeight);
-            console.log("Current Cube Count:" + monday_currentCube);
-        }
+            thisday = new Activity(day_pos[i], 0, 60);
 
         };
-
-        monday_addCube.add(monday_makecube,'Make a Cube');
-
-        // Tuesday
+        
+        // Gui Start
         //
         //
-        var tuesday_addCube = gui.addFolder("Tuesday");
 
-        var tuesday_currentHeight = 0;
-        var tuesday_currentCube = 0;
-
-        var tuesday_makecube = {
-            'Make a Cube':function makecube(){
-
-            if (tuesday_currentHeight >= 1440) {
-                return console.log('Limit Reached');
-            };
-            var cubeSize = 60;
-            var cubeGeo = new THREE.BoxBufferGeometry(cubeSize, cubeSize, cubeSize);
-            var cubeMat = new THREE.MeshPhongMaterial({color: '#FF0000'});
-            var mesh_x = new THREE.Mesh(cubeGeo, cubeMat);
-            mesh_x.position.set(-180, -69 + tuesday_currentHeight, 0);
-            cubeMat.color.setHex(Math.random() * 0xffffff);
-            scene.add(mesh_x);
-
-            tuesday_currentHeight += 60;
-            tuesday_currentCube +=1;
-            console.log("Current Cube Height:" + tuesday_currentHeight);
-            console.log("Current Cube Count:" + tuesday_currentCube);
-        }
-
-        };
-
-        tuesday_addCube.add(tuesday_makecube,'Make a Cube');
-
-
-        monday_addCube.open();
-        tuesday_addCube.open();
-
-        // var moving = gui.addFolder( "Movement" );
-
-        // var ini_x = r.head.position.getComponent(0);
-        // var ini_y = r.head.position.getComponent(1);
-        // var ini_z = r.head.position.getComponent(2);
-        // var reset_pos = {
-        //   'Reset Position':function(){ 
-        //     console.log("clicked");
-        //     console.log(ini_x);
-        //     console.log(ini_y);
-        //     console.log(ini_z);
-        //     r.head.position.set(ini_x,ini_y,ini_z);
-        //     console.log("r.head.position" + r.head.position.x);
-        //   }
-        // };
-        // moving.add(reset_pos,'Reset Position');
-
-        // moving.add( r.head.position, "x", -1000, 1000 ).listen();
-        // moving.add( r.head.position, "y", -1000, 1000 ).listen();
-        // moving.add( r.head.position, "z", -1000, 1000 ).listen();
-        // moving.open();
-
-        // var animation = gui.addFolder( "Animate" );
-
-        // animation.add( r, "raise_left_arm" );
-        // animation.add( r, "lower_left_arm" );
-        // animation.add( r, "right_kick" );
-        // animation.add( r, "left_kick" );
-        // animation.add( r, "dance" );
-        // animation.add( r, "freeze" );
-
-        // animation.open();
+    
 
         //
         //
-        // Gui end
+        // Gui End
 
         animate();
 
@@ -257,6 +182,244 @@
         
 
       };
+
+
+    </script>
+    
+
+        <script>
+
+
+        var container = document.getElementById("fake-container");
+        console.log(this);
+
+        // Create the GUI
+        var gui = new guify({
+            title: 'Scheduler',
+            theme: 'dark', // dark, light, yorha, or theme object
+            align: 'right', // left, right
+            width: 300,
+            barMode: 'offset', // none, overlay, above, offset
+            panelMode: 'inner',
+            opacity: 0.95,
+            root: container,
+            open: true
+        });
+
+        // Populate the GUI
+
+        gui.Register({
+            type: 'title',
+            label: 'New Activity'
+        });
+
+        var day_Selection = 'Monday';
+        gui.Register({
+            type: 'select',
+            label: 'Select Day',
+            object: this,
+            property: 'day_Selection',
+            options: ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+            onChange: (data) => {
+                console.log(day_Selection);
+            }
+        })
+
+        var actdesc_Text = 'Add Description Here';
+        gui.Register({
+            type: 'text',
+            label: 'Activity Description',
+            object: this,
+            property: 'actdesc_Text',
+            onChange: (data) => {
+                console.log(actdesc_Text);
+            }
+        })
+
+        var duration = [], i, j;
+        for(i=0; i<24; i++) {
+          for(j=0; j<4; j++) {
+            duration.push(i + ":" + (j===0 ? "00" : 15*j) );
+          };
+        };
+
+        console.log(duration);
+
+        var duration_start_Selection = '0:00';
+        gui.Register({
+            type: 'select',
+            label: 'Select Start Duration',
+            object: this,
+            property: 'duration_start_Selection',
+            options: duration,
+            onChange: (data) => {
+                console.log(duration_start_Selection);
+            }
+        })
+
+        var duration_end_Selection = '0:00';
+        gui.Register({
+            type: 'select',
+            label: 'Select End Duration',
+            object: this,
+            property: 'duration_end_Selection',
+            options: duration,
+            onChange: (data) => {
+                console.log(duration_end_Selection);
+            }
+        })        
+
+        // var rgbColor = 'rgb(255, 0, 0)';
+        // gui.Register({
+        //     type: 'color',
+        //     label: 'RGB Color',
+        //     format: 'rgb',
+        //     object: this,
+        //     property: 'rgbColor'
+        // })
+
+        var hexColor = '#00FF00';
+        gui.Register({
+            type: 'color',
+            label: 'Hex Color',
+            format: 'hex',
+            object: this,
+            property: 'hexColor'
+        })
+
+        
+
+        gui.Register({
+            type: 'button',
+            label: 'Add Activity',
+            action: () => {
+                console.log('Clicked');
+                // console.log(duration_start_Selection - duration_end_Selection);
+
+                var dur_start = duration_start_Selection;   // your input string
+                var a = dur_start.split(':'); // split it at the colons
+
+                // Hours are worth 60 minutes.
+                var start_minutes = (+a[0]) * 60 + (+a[1]);
+
+                var dur_end = duration_end_Selection;   // your input string
+                var b = dur_end.split(':'); // split it at the colons
+
+                // Hours are worth 60 minutes.
+                var end_minutes = (+b[0]) * 60 + (+b[1]);
+
+                var total_minutes = end_minutes - start_minutes;
+
+                console.log('Start Duration: ' + start_minutes);
+                console.log('End Duration: ' + end_minutes);
+                console.log(total_minutes);
+
+                thisotherday = new Activity(-710, actdesc_Text, total_minutes, hexColor);
+
+
+            }
+        })
+
+
+        // var file = null;
+        // gui.Register({
+        //     type: 'file',
+        //     label: 'File',
+        //     object: this,
+        //     property: 'file',
+        //     onChange: (data) => {
+        //         console.log(data);
+        //     }
+        // })
+
+        // var displayValue = "Displays the toString representation of a variable.";
+        // gui.Register({
+        //     type: 'display',
+        //     label: 'Display',
+        //     object: this,
+        //     property: 'displayValue'
+        // })
+
+        // // Folder example
+        // gui.Register({
+        //     type: 'folder',
+        //     label: 'Folder',
+        //     open: false
+        // });
+
+        // // Add to the folder example
+        // gui.Register([
+        //     { type: 'range', label: 'Range', min: 0, max: 20, step: 1 },
+        //     { type: 'title', label: 'Title' },
+        //     { type: 'button', label: 'Button' },
+        //     { type: 'checkbox', label: 'Checkbox' },
+        //     { type: 'select', label: 'Select', options: ["Option A", "Option B"] },
+        //     { type: 'text', label: 'Text', initial: 'Some text' },
+        //     { type: 'color', label: 'Color' },
+        // ], {
+        //         folder: 'Folder'
+        //     });
+
+        // gui.Register({
+        //     type: 'text',
+        //     label: 'long long long long long long long long label',
+        //     folder: 'Folder',
+        // })
+
+        // // Add a nested folder
+        // gui.Register({ type: 'folder', label: 'Nested Folder', folder: 'Folder', open: false });
+        // gui.Register({ type: 'text', label: 'Folder Text', folder: 'Nested Folder', initial: 'Nested text' });
+
+        // // Debug folder
+        // gui.Register({
+        //     type: 'folder',
+        //     label: 'Debug',
+        //     open: false
+        // })
+
+        // gui.Register({
+        //     type: 'button',
+        //     label: 'Toast Test',
+        //     folder: 'Debug',
+        //     action: () => {
+        //         // Send a toast
+        //         gui.Toast('Test Toast');
+        //     },
+        // })
+
+        // gui.Register({
+        //     type: 'button',
+        //     label: 'Randomize Components',
+        //     folder: 'Debug',
+        //     action: () => {
+        //         // Randomize all the values bound to components in this example.
+        //         // Good test for whether component binding is actually working.
+        //         someNumber = Math.random() * 10;
+        //         steppedNumber = ~~((Math.random() + 0.1) * 8) * 8;
+        //         logNumber = Math.random() * 99 + 0.1;
+        //         checkboxTest = !checkboxTest;
+
+        //         testText = (Math.random() + 1).toString(36).substring(7); // Random string
+        //         rgbColor = 'rgb(' + Math.random() * 255 + ', 0, 0)';
+        //         hexColor = "#";
+        //         for (var i = 0; i < 6; i++) hexColor += Math.floor(Math.random() * 9).toString()
+
+        //         testSelection = "Option " + (Math.random() < 0.5 ? "1" : "2");
+        //     }
+        // })
+
+        // // This button gets automatically removed by our API
+        // var removedButton = gui.Register({
+        //     type: 'button',
+        //     label: 'Button',
+        //     action: () => {
+        //         console.log('Clicked');
+        //     }
+        // })
+        // removedButton.container.disabled = true;
+        // gui.Remove(removedButton);
+
+
 
     </script>
   </head>
