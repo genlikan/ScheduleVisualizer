@@ -29,7 +29,7 @@ Activity = function(Day, Activity_Description, Duration, Color) {
 
   if (this.currentHeight == null){
     this.currentHeight += 60;
-  };
+  }
 
   else {
     this.currentHeight += Duration;
