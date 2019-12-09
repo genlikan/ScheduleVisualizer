@@ -89,7 +89,7 @@
 
         var days = [0,1,2,3,4,5,6];
 
-        var days_name = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+        days_name = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
 
         var loader = new THREE.FontLoader();
         loader.load( 'fonts/White_Smith_Regular.json', function ( font ) {
@@ -126,7 +126,7 @@
 
         });
 
-        var day_pos = [-710, -460, -210, 40, 290, 540, 790];
+        day_pos = [-710, -460, -210, 40, 290, 540, 790];
 
         for (var i = 0; i < day_pos.length; i++) {
 
@@ -211,6 +211,7 @@
             label: 'New Activity'
         });
 
+        var Chosen_Time = -710;
         var day_Selection = 'Monday';
         gui.Register({
             type: 'select',
@@ -220,6 +221,12 @@
             options: ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
             onChange: (data) => {
                 console.log(day_Selection);
+                
+                Chosen_Time = day_pos[days_name.indexOf(day_Selection)];
+                console.log(days_name.indexOf(day_Selection));
+                console.log(Chosen_Time);
+
+
             }
         })
 
@@ -312,7 +319,12 @@
                 console.log('End Duration: ' + end_minutes);
                 console.log(total_minutes);
 
-                thisotherday = new Activity(-710, actdesc_Text, total_minutes, hexColor);
+                console.log("Chosen_Time: " + Chosen_Time);
+                console.log("actdesc_Text: " + actdesc_Text);
+                console.log("total_minutes: " + total_minutes);
+                console.log("hexColor: " + hexColor);
+
+                thisotherday = new Activity(Chosen_Time, actdesc_Text, total_minutes, hexColor);
 
 
             }
