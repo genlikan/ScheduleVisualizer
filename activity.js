@@ -25,6 +25,22 @@ Activity = function(Day, Activity_Description, Duration, Color) {
     cubeMat.color.setHex(Color.replace('#', '0x'));
   }
 
+  //////////////////////////
+  // ACTIVITY_DESCRIPTION //
+  //////////////////////////
+
+  if (Activity_Description == null){
+    mesh.userData.tooltipText = "Default";
+  }
+
+  else {
+    mesh.userData.tooltipText = Activity_Description;
+  }
+
+  console.log("What is the Mesh.name?: " + mesh.userData.tooltipText);
+
+  this.currentMesh = mesh;
+
   scene.add(mesh);
 
   if (this.currentHeight == null){
