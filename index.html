@@ -92,7 +92,7 @@
         camera = new THREE.PerspectiveCamera(fov, ratio, zNear, zFar);
 
         // camera.position.set( 0, 1600, 1400);
-        camera.position.set( 0, 0, 600);
+        camera.position.set( 0, 50, 600);
 
 
         renderer = new THREE.WebGLRenderer({ alpha: true });
@@ -114,7 +114,7 @@
         } );
         floor = new THREE.Mesh( floorGeometry, floorMaterial );
         floor.position.x = 60;
-        floor.position.y = -100;
+        // floor.position.y = -100;
         floor.rotateX(Math.PI/2);
         scene.add( floor );
 
@@ -140,7 +140,7 @@
         ////////////////////////////////////////
 
 
-        var initial_text_pos = [-800, -69, 100];
+        var initial_text_pos = [-800, 31, 100];
 
         var days = [0,1,2,3,4,5,6];
 
@@ -186,16 +186,81 @@
         
         for (var i = 0; i < day_pos.length; i++) {
 
-            thisday = new Activity(day_pos[i], days_name[i], 60, null);
+            thisday = new Activity(day_pos[i], days_name[i], 60, null, null, null);
 
             tooltipEnabledObjects.push(thisday.currentMesh);
 
         };
 
         
-        // Gui Start
+        // TOOLTIP START
         //
         //
+
+        var cubeGeo = new THREE.BoxBufferGeometry(120, 1440, 120);
+        var cubeMat = new THREE.MeshPhongMaterial({color: "green"});
+        var TESTCUBE = new THREE.Mesh(cubeGeo, cubeMat);
+        TESTCUBE.position.set(500, 31 + 690, 200);
+        scene.add(TESTCUBE);
+        //CLOSEST
+
+        var cubeGeo = new THREE.BoxBufferGeometry(120, 1440, 120);
+        var cubeMat = new THREE.MeshPhongMaterial({color: "pink"});
+        var TESTCUBE = new THREE.Mesh(cubeGeo, cubeMat);
+        TESTCUBE.position.set(750, 31 + 689, 200);
+        scene.add(TESTCUBE);
+        //JUST CLIPPING
+
+        var cubeGeo = new THREE.BoxBufferGeometry(120, 720, 120);
+        var cubeMat = new THREE.MeshPhongMaterial({color: "purple"});
+        var TESTCUBE = new THREE.Mesh(cubeGeo, cubeMat);
+        TESTCUBE.position.set(500, 31 + 330, 300);
+        scene.add(TESTCUBE);
+        //CLOSEST
+
+        var cubeGeo = new THREE.BoxBufferGeometry(120, 720, 120);
+        var cubeMat = new THREE.MeshPhongMaterial({color: "blue"});
+        var TESTCUBE = new THREE.Mesh(cubeGeo, cubeMat);
+        TESTCUBE.position.set(750, 31 + 329, 300);
+        scene.add(TESTCUBE);
+        //JUST CLIPPING
+
+        var cubeGeo = new THREE.BoxBufferGeometry(120, 480, 120);
+        var cubeMat = new THREE.MeshPhongMaterial({color: "green"});
+        var TESTCUBE = new THREE.Mesh(cubeGeo, cubeMat);
+        TESTCUBE.position.set(500, 31 + 210, 350);
+        scene.add(TESTCUBE);
+        //CLOSEST
+
+        var cubeGeo = new THREE.BoxBufferGeometry(120, 480, 120);
+        var cubeMat = new THREE.MeshPhongMaterial({color: "black"});
+        var TESTCUBE = new THREE.Mesh(cubeGeo, cubeMat);
+        TESTCUBE.position.set(750, 31 + 209, 350);
+        scene.add(TESTCUBE);
+        //JUST CLIPPING
+
+        var cubeGeo = new THREE.BoxBufferGeometry(120, 360, 120);
+        var cubeMat = new THREE.MeshPhongMaterial({color: "purple"});
+        var TESTCUBE = new THREE.Mesh(cubeGeo, cubeMat);
+        TESTCUBE.position.set(500, 31 + 150, 400);
+        scene.add(TESTCUBE);
+        //CLOSEST
+
+        var cubeGeo = new THREE.BoxBufferGeometry(120, 360, 120);
+        var cubeMat = new THREE.MeshPhongMaterial({color: "blue"});
+        var TESTCUBE = new THREE.Mesh(cubeGeo, cubeMat);
+        TESTCUBE.position.set(750, 31 + 149, 400);
+        scene.add(TESTCUBE);
+        //JUST CLIPPING
+
+        var cubeGeo = new THREE.BoxBufferGeometry(120, 240, 120);
+        var cubeMat = new THREE.MeshPhongMaterial({color: "red"});
+        var TESTCUBE = new THREE.Mesh(cubeGeo, cubeMat);
+        TESTCUBE.position.set(750, 120, 450);
+        scene.add(TESTCUBE);
+        //JUST CLIPPING
+        
+
 
         var latestMouseProjection; // this is the latest projection of the mouse on object (i.e. intersection with ray)
         var hoveredObj; // this objects is hovered at the moment
@@ -280,7 +345,7 @@
         tooltipDisplayTimeout = setTimeout(function() {
           tooltipDisplayTimeout = undefined;
           showTooltip();
-        }, 330);
+        }, 100);
       }
     }
 
@@ -295,7 +360,7 @@
 
         //
         //
-        // Gui End
+        // TOOLTIP END
 
         animate();
 
@@ -319,10 +384,10 @@
             raycaster.setFromCamera(vp_coords_near, camera);
             intersects = raycaster.intersectObject(floor);
 
-            first_intersection = intersects[0];
+            intersection = intersects[0];
 
             // repositions Robot
-            r.head.position.set(first_intersection.point.x, first_intersection.point.y, first_intersection.point.z);
+            r.head.position.set(intersection.point.x, intersection.point.y, intersection.point.z);
           };
       };
 
@@ -479,7 +544,9 @@
                 console.log("total_minutes: " + total_minutes);
                 console.log("hexColor: " + hexColor);
 
-                thisotherday = new Activity(Chosen_Time, actdesc_Text, total_minutes, hexColor);
+                console.log("///////////////////////");
+
+                thisotherday = new Activity(Chosen_Time, actdesc_Text, total_minutes, start_minutes, end_minutes, hexColor);
                 tooltipEnabledObjects.push(thisotherday.currentMesh);
 
 

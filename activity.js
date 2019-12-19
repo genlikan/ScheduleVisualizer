@@ -1,20 +1,49 @@
-Activity = function(Day, Activity_Description, Duration, Color) {
+Activity = function(Day, Activity_Description, Duration, Start_Act, End_Act, Color) {
 
-  this.currentHeight = 0;
+  // this.currentHeight = 0;
   this.currentCube = 0;
 
   this.act_desc = Activity_Description;
   this.cubeSize = Duration;
 
-  if (this.currentHeight >= 1440) {
-      return console.log('Limit Reached');
-  };
+  var MinInDay = 1440;
+
+  if ((Start_Act && End_Act) != null){
+    this.max_height = MinInDay - Start_Act;
+    this.min_height = MinInDay - End_Act;
+    // console.log("this.max_height: " + this.max_height);
+    // console.log("this.min_height: " + this.min_height);
+  }
+  else {
+    this.min_height = 0;
+  }
+
+  // if (this.currentHeight >= 1440) {
+  //     return console.log('Limit Reached');
+  // };
 
   var cubeGeo = new THREE.BoxBufferGeometry(120, this.cubeSize, 120);
   var cubeMat = new THREE.MeshPhongMaterial({color: '#FF0000'});
   var mesh = new THREE.Mesh(cubeGeo, cubeMat);
 
-  mesh.position.set(Day, -69 + this.currentHeight, 0);
+
+  console.log("this.max_height is: " + this.max_height);
+
+  console.log("this.min_height is: " + this.min_height);
+
+  // this.offset = 31;
+  this.offset = this.cubeSize/2;
+
+  // this.starting_height = this.offset + this.currentHeight + this.min_height;
+  this.starting_height = this.offset + this.min_height;
+
+  console.log("-31 + this.min_height : " + this.starting_height);
+
+  mesh.position.set(Day, this.starting_height , 0);
+
+  ///////////
+  // COLOR //
+  ///////////
 
   if (Color == null){
     console.log(Color);
@@ -37,21 +66,21 @@ Activity = function(Day, Activity_Description, Duration, Color) {
     mesh.userData.tooltipText = Activity_Description;
   }
 
-  console.log("What is the Mesh.name?: " + mesh.userData.tooltipText);
+  console.log("What is the mesh.userData.tooltipText?: " + mesh.userData.tooltipText);
 
   this.currentMesh = mesh;
 
   scene.add(mesh);
 
-  if (this.currentHeight == null){
-    this.currentHeight += 60;
-  }
+  // if (this.currentHeight == null){
+  //   this.currentHeight += 60;
+  // }
 
-  else {
-    this.currentHeight += Duration;
-  };
+  // else {
+  //   this.currentHeight += Duration;
+  // };
   
-  this.currentCube += 1;
+  // this.currentCube += 1;
 
   console.log("Current Cube Height:" + this.currentHeight);
   console.log("Current Cube Count:" + this.currentCube);
