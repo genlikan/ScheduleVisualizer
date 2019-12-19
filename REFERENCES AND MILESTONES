@@ -58,7 +58,7 @@ Selection of appropriate days via selection
 Chosen_Time = day_pos[days_name.indexOf(day_Selection)];
 
 
-Cube won't start in the correct position, causing clipping to the floorplane
+Cube won't start in the correct position, may causing clipping to the floorplane
 ////////////
 creation of testcubes to experiment
 Turns out, the floorplane's position was offset
@@ -68,6 +68,15 @@ which is the distance from origin to the bottom.
 the true offset for the position is then 
 this.cubeSize/2 + this.min_height
 where, this.min_height = MinInDay - End_Act;
+
+Time selected now goes from top to bottom
+//////////
+this.max_height = MinInDay - Start_Act;
+this.min_height = MinInDay - End_Act;
+
+where, var MinInDay = 1440;
+
+
 
 Contingencies
 //////////

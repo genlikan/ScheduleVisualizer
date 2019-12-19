@@ -37,7 +37,7 @@ Activity = function(Day, Activity_Description, Duration, Start_Act, End_Act, Col
   // this.starting_height = this.offset + this.currentHeight + this.min_height;
   this.starting_height = this.offset + this.min_height;
 
-  console.log("-31 + this.min_height : " + this.starting_height);
+  console.log("this.cubeSize/2 + this.min_height : " + this.starting_height);
 
   mesh.position.set(Day, this.starting_height , 0);
 
