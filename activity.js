@@ -1,10 +1,27 @@
-Activity = function(Day, Activity_Description, Duration, Start_Act, End_Act, Color) {
+Activity = function(DayName, DayPosition, Activity_Description, Duration, Start_Act, End_Act, Color) {
 
-  // this.currentHeight = 0;
-  this.currentCube = 0;
+  this.Day_Name = DayName;
 
   this.act_desc = Activity_Description;
   this.cubeSize = Duration;
+
+  this.start_time = Start_Act;
+  this.end_time = End_Act;
+
+  function timeConvert(n) {
+    var num = n;
+    var hours = (num / 60);
+    var rhours = Math.floor(hours);
+    var minutes = (hours - rhours) * 60;
+    var rminutes = Math.round(minutes);
+    return rhours + ":" + rminutes;
+    }
+
+  console.log("this.start_time: " + this.start_time);
+
+  console.log("this.end_time: " + this.end_time);
+
+  console.log("/////////////");
 
   var MinInDay = 1440;
 
@@ -26,7 +43,6 @@ Activity = function(Day, Activity_Description, Duration, Start_Act, End_Act, Col
   var cubeMat = new THREE.MeshPhongMaterial({color: '#FF0000'});
   var mesh = new THREE.Mesh(cubeGeo, cubeMat);
 
-
   console.log("this.max_height is: " + this.max_height);
 
   console.log("this.min_height is: " + this.min_height);
@@ -39,7 +55,7 @@ Activity = function(Day, Activity_Description, Duration, Start_Act, End_Act, Col
 
   console.log("this.cubeSize/2 + this.min_height : " + this.starting_height);
 
-  mesh.position.set(Day, this.starting_height , 0);
+  mesh.position.set(DayPosition, this.starting_height , 0);
 
   ///////////
   // COLOR //
@@ -63,48 +79,29 @@ Activity = function(Day, Activity_Description, Duration, Start_Act, End_Act, Col
   }
 
   else {
-    mesh.userData.tooltipText = Activity_Description;
+
+    mesh.userData.tooltipText = Activity_Description + ": " + timeConvert(Start_Act) + " to " + timeConvert(End_Act);
   }
 
   console.log("What is the mesh.userData.tooltipText?: " + mesh.userData.tooltipText);
 
   this.currentMesh = mesh;
 
+  mesh.userData.Day = this.Day_Name;
+
+  mesh.userData.Start = Start_Act;
+  mesh.userData.End = End_Act;
+
   scene.add(mesh);
 
-  // if (this.currentHeight == null){
-  //   this.currentHeight += 60;
-  // }
-
-  // else {
-  //   this.currentHeight += Duration;
-  // };
-  
-  // this.currentCube += 1;
-
-  console.log("Current Cube Height:" + this.currentHeight);
-  console.log("Current Cube Count:" + this.currentCube);
+  this.removeActivity = function() {
+    scene.remove(mesh);
+    mesh.geometry.dispose();
+    mesh.material.dispose();
+    mesh = undefined;
+    console.log("///removeActivity() Called///")
+  }
 
 };
 
-  // create head, neck, and, torso
-  // var fromhelper = HELPER.cylinderSkeletonMesh(3, 5, 'blue')
-  // var geometry = fromhelper[0];
-  // var material = fromhelper[1];
-  // var bones = fromhelper[2];
-
-  // var mesh = new THREE.SkinnedMesh( geometry, material );
-  // var skeleton = new THREE.Skeleton( bones );
-  // mesh.add( bones[ 0 ] );
-  // mesh.bind( skeleton );
-
-  // this.root = bones[ 0 ];
-  // this.root.position.set(x, y, z);
-
-  // this.head = bones[ 1 ];
-  // this.neck = bones[ 2 ];
-  // this.neck.position.y = -10;
-  // this.torso = bones[ 3 ];
-  // this.torso.position.y = -30;
-  // this.body_mesh = mesh;
-  // this.movement = null;
+//add 2 days, delete the previous one raycaster no longer

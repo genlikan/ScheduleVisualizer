@@ -71,6 +71,24 @@
       var floor;
       var tooltipEnabledObjects = [];
 
+      var Monday_Activity_Array = [],
+      Tuesday_Activity_Array = [],
+      Wednesday_Activity_Array = [],
+      Thursday_Activity_Array = [],
+      Friday_Activity_Array = [],
+      Saturday_Activity_Array = [],
+      Sunday_Activity_Array = [];
+
+      var Activity_Array = [
+                        Monday_Activity_Array, 
+                        Tuesday_Activity_Array, 
+                        Wednesday_Activity_Array, 
+                        Thursday_Activity_Array, 
+                        Friday_Activity_Array, 
+                        Saturday_Activity_Array, 
+                        Sunday_Activity_Array
+                        ];
+
       // standard global variables
         var container, stats;
         var keyboard = new THREEx.KeyboardState();
@@ -92,7 +110,7 @@
         camera = new THREE.PerspectiveCamera(fov, ratio, zNear, zFar);
 
         // camera.position.set( 0, 1600, 1400);
-        camera.position.set( 0, 50, 600);
+        camera.position.set( 0, 1000, 500);
 
 
         renderer = new THREE.WebGLRenderer({ alpha: true });
@@ -114,7 +132,7 @@
         } );
         floor = new THREE.Mesh( floorGeometry, floorMaterial );
         floor.position.x = 60;
-        // floor.position.y = -100;
+        floor.position.y = -1;
         floor.rotateX(Math.PI/2);
         scene.add( floor );
 
@@ -132,8 +150,8 @@
 
         stats = new Stats();
         stats.domElement.style.position = 'fixed';
-        stats.domElement.style.top = '0px';
-        stats.domElement.style.left = '0px';
+        stats.domElement.style.bottom = '0px';
+        stats.domElement.style.right = '0px';
         stats.domElement.style.zIndex = 100;
         container.appendChild( stats.domElement );
 
@@ -184,83 +202,18 @@
         day_pos = [-710, -460, -210, 40, 290, 540, 790];
 
         
-        for (var i = 0; i < day_pos.length; i++) {
+        // for (var i = 0; i < day_pos.length; i++) {
 
-            thisday = new Activity(day_pos[i], days_name[i], 60, null, null, null);
+        //     thisday = new Activity(days_name[i], day_pos[i], days_name[i], 60, null, null, null);
 
-            tooltipEnabledObjects.push(thisday.currentMesh);
+        //     tooltipEnabledObjects.push(thisday.currentMesh);
 
-        };
+        // };
 
         
         // TOOLTIP START
         //
         //
-
-        var cubeGeo = new THREE.BoxBufferGeometry(120, 1440, 120);
-        var cubeMat = new THREE.MeshPhongMaterial({color: "green"});
-        var TESTCUBE = new THREE.Mesh(cubeGeo, cubeMat);
-        TESTCUBE.position.set(500, 31 + 690, 200);
-        scene.add(TESTCUBE);
-        //CLOSEST
-
-        var cubeGeo = new THREE.BoxBufferGeometry(120, 1440, 120);
-        var cubeMat = new THREE.MeshPhongMaterial({color: "pink"});
-        var TESTCUBE = new THREE.Mesh(cubeGeo, cubeMat);
-        TESTCUBE.position.set(750, 31 + 689, 200);
-        scene.add(TESTCUBE);
-        //JUST CLIPPING
-
-        var cubeGeo = new THREE.BoxBufferGeometry(120, 720, 120);
-        var cubeMat = new THREE.MeshPhongMaterial({color: "purple"});
-        var TESTCUBE = new THREE.Mesh(cubeGeo, cubeMat);
-        TESTCUBE.position.set(500, 31 + 330, 300);
-        scene.add(TESTCUBE);
-        //CLOSEST
-
-        var cubeGeo = new THREE.BoxBufferGeometry(120, 720, 120);
-        var cubeMat = new THREE.MeshPhongMaterial({color: "blue"});
-        var TESTCUBE = new THREE.Mesh(cubeGeo, cubeMat);
-        TESTCUBE.position.set(750, 31 + 329, 300);
-        scene.add(TESTCUBE);
-        //JUST CLIPPING
-
-        var cubeGeo = new THREE.BoxBufferGeometry(120, 480, 120);
-        var cubeMat = new THREE.MeshPhongMaterial({color: "green"});
-        var TESTCUBE = new THREE.Mesh(cubeGeo, cubeMat);
-        TESTCUBE.position.set(500, 31 + 210, 350);
-        scene.add(TESTCUBE);
-        //CLOSEST
-
-        var cubeGeo = new THREE.BoxBufferGeometry(120, 480, 120);
-        var cubeMat = new THREE.MeshPhongMaterial({color: "black"});
-        var TESTCUBE = new THREE.Mesh(cubeGeo, cubeMat);
-        TESTCUBE.position.set(750, 31 + 209, 350);
-        scene.add(TESTCUBE);
-        //JUST CLIPPING
-
-        var cubeGeo = new THREE.BoxBufferGeometry(120, 360, 120);
-        var cubeMat = new THREE.MeshPhongMaterial({color: "purple"});
-        var TESTCUBE = new THREE.Mesh(cubeGeo, cubeMat);
-        TESTCUBE.position.set(500, 31 + 150, 400);
-        scene.add(TESTCUBE);
-        //CLOSEST
-
-        var cubeGeo = new THREE.BoxBufferGeometry(120, 360, 120);
-        var cubeMat = new THREE.MeshPhongMaterial({color: "blue"});
-        var TESTCUBE = new THREE.Mesh(cubeGeo, cubeMat);
-        TESTCUBE.position.set(750, 31 + 149, 400);
-        scene.add(TESTCUBE);
-        //JUST CLIPPING
-
-        var cubeGeo = new THREE.BoxBufferGeometry(120, 240, 120);
-        var cubeMat = new THREE.MeshPhongMaterial({color: "red"});
-        var TESTCUBE = new THREE.Mesh(cubeGeo, cubeMat);
-        TESTCUBE.position.set(750, 120, 450);
-        scene.add(TESTCUBE);
-        //JUST CLIPPING
-        
-
 
         var latestMouseProjection; // this is the latest projection of the mouse on object (i.e. intersection with ray)
         var hoveredObj; // this objects is hovered at the moment
@@ -356,39 +309,85 @@
       hoveredObj = undefined;
       handleManipulationUpdate();
     }
+
     window.addEventListener('mousemove', onMouseMove, false);
 
         //
         //
         // TOOLTIP END
 
-        animate();
+        
 
         // Onclick and Raycaster using "floor"
-        renderer.domElement.onclick = function( e ){
+        renderer.domElement.onclick = function( event ){
 
-            if (!e.shiftKey) {
-                e.preventDefault();
+            if (!event.shiftKey) {
+                event.preventDefault();
                 return false;
             }
-          
-            pixel_coords = new THREE.Vector2( e.clientX, e.clientY );
 
-            vp_coords = new THREE.Vector2( 
-                        ( pixel_coords.x / window.innerWidth ) * 2 - 1,
-                        -( pixel_coords.y / window.innerHeight ) * 2 + 1) 
+          var mouse3D = new THREE.Vector3( ( event.clientX / window.innerWidth ) * 2 - 1,   
+                                    -( event.clientY / window.innerHeight ) * 2 + 1,  
+                                    0.5 );     
+            var raycaster_2 =  new THREE.Raycaster();                                        
+           raycaster_2.setFromCamera( mouse3D, camera );
+            var intersects_2 = raycaster_2.intersectObjects( scene.children );
 
-            vp_coords_near = new THREE.Vector3( vp_coords.x, vp_coords.y, 0);
+            // var intersects_2 = raycaster_2.intersectObjects( tooltipEnabledObjects );
 
+            console.log("intersects_2: " + intersects_2);
+
+            if ( intersects_2.length > 0 ) {
+                // intersects[ 0 ].object.material.color.setHex( Math.random() * 0xffffff );
+                console.log( "//////////INSIDE SHIFT + CLICK///////////" );
+
+                console.log(intersects_2);
+
+                console.log( intersects_2[0] );
+                console.log( intersects_2[0].object );
+                console.log( intersects_2[0].object.userData.Day );
+                console.log( intersects_2[0].object.userData.Start );
+                console.log( intersects_2[0].object.userData.End );
+
+                var intersected_day = intersects_2[0].object.userData.Day;
+                var day_start = intersects_2[0].object.userData.Start;
+                var day_end = intersects_2[0].object.userData.End;
+                var intersected_mesh = intersects_2[ 0 ].object;
+                var intersected_day_index = days_name.indexOf(intersected_day);
+
+                console.log("tooltipEnabledObjects : " + tooltipEnabledObjects);
+                console.log("intersected_mesh : " + intersected_mesh);
+
+                tooltipEnabledObjects.pop(intersected_mesh);
+
+                console.log( "intersects_2[0].object : " + intersects_2[0].object );
+    
+                    
+                    for (var j = 0; j < Activity_Array[intersected_day_index].length; j++) {
+
+                        if (Activity_Array[intersected_day_index][j].start_time == day_start && Activity_Array[intersected_day_index][j].end_time == day_end) {
+
+                            console.log("//OMG ITS THE SAME//");
+
+                            // tooltipEnabledObjects.pop(Activity_Array[intersected_day_index][j].currentMesh);
+
+                            Activity_Array[intersected_day_index][j].removeActivity();
+
+                            Activity_Array[intersected_day_index].pop(Activity_Array[intersected_day_index][j]);
+
+                            return gui.Toast("Removed.");
+                        }
+
+                    }
+
+
+            }
             
-            raycaster.setFromCamera(vp_coords_near, camera);
-            intersects = raycaster.intersectObject(floor);
+            console.log("///Triggered///");
 
-            intersection = intersects[0];
-
-            // repositions Robot
-            r.head.position.set(intersection.point.x, intersection.point.y, intersection.point.z);
           };
+
+          animate();
       };
 
       
@@ -468,7 +467,9 @@
           };
         };
 
-        // console.log(duration);
+        duration.push(24 + ":" + "00");
+
+        console.log(duration);
 
         var duration_start_Selection = '0:00';
         gui.Register({
@@ -535,6 +536,15 @@
 
                 var total_minutes = end_minutes - start_minutes;
 
+                if ((Math.sign(total_minutes) == -1) || (end_minutes == start_minutes)) {
+
+                        gui.Toast("Uh Oh! It looks like you're attempting to time travel!");
+
+                        gui.Toast("We cannot allow that.");
+
+                      return gui.Toast("(AKA an Error has Occured.)");
+                }
+
                 console.log('Start Duration: ' + start_minutes);
                 console.log('End Duration: ' + end_minutes);
                 console.log(total_minutes);
@@ -546,8 +556,50 @@
 
                 console.log("///////////////////////");
 
-                thisotherday = new Activity(Chosen_Time, actdesc_Text, total_minutes, start_minutes, end_minutes, hexColor);
-                tooltipEnabledObjects.push(thisotherday.currentMesh);
+                new_activity = new Activity(day_Selection, Chosen_Time, actdesc_Text, total_minutes, start_minutes, end_minutes, hexColor);
+
+
+                //which day to shove in which array
+                
+
+
+                // Select Day to check
+                // Check for intersection
+                // console.log("////THIS IS HERE SECOND////");
+                // console.log(Activity_Array[days_name.indexOf(day_Selection)].length);
+
+                // console.log(Activity_Array[days_name.indexOf(day_Selection)].length == 0);
+
+                Activity_Array[days_name.indexOf(day_Selection)].push(new_activity);
+            
+
+                for (var j = 0; j < Activity_Array[days_name.indexOf(day_Selection)].length; j++) {
+
+                        console.log( "//////////INSIDE FOR LOOP///////////" );
+
+                        if (((Activity_Array[days_name.indexOf(day_Selection)][j].start_time < new_activity.start_time) && (new_activity.start_time < Activity_Array[days_name.indexOf(day_Selection)][j].end_time)) 
+                            ||
+                             ((Activity_Array[days_name.indexOf(day_Selection)][j].start_time < new_activity.end_time) && (new_activity.end_time < Activity_Array[days_name.indexOf(day_Selection)][j].end_time))
+                             ||
+                             ((Activity_Array[days_name.indexOf(day_Selection)][j].start_time >= new_activity.start_time) && (new_activity.end_time > Activity_Array[days_name.indexOf(day_Selection)][j].end_time))
+                             ||
+                             ((Activity_Array[days_name.indexOf(day_Selection)][j].start_time > new_activity.start_time) && (new_activity.end_time >= Activity_Array[days_name.indexOf(day_Selection)][j].end_time))
+                             ) {
+
+                            console.log( "//////////INSIDE INTERSECTION///////////" );
+
+                            new_activity.removeActivity();
+
+                            Activity_Array[days_name.indexOf(day_Selection)].pop();
+
+                            return gui.Toast("There appears to be an overlap/intersection.");
+                        }
+
+
+                    }
+
+                
+                tooltipEnabledObjects.push(new_activity.currentMesh);
 
 
             }
@@ -582,43 +634,30 @@
         //     }
         // })
 
-        // var displayValue = "Displays the toString representation of a variable.";
-        // gui.Register({
-        //     type: 'display',
-        //     label: 'Display',
-        //     object: this,
-        //     property: 'displayValue'
-        // })
+        var displayValue = "Hold Shift key and Click to Delete.";
+        gui.Register({
+            type: 'display',
+            label: 'Deletion',
+            object: this,
+            property: 'displayValue'
+        })
 
-        // // Folder example
-        // gui.Register({
-        //     type: 'folder',
-        //     label: 'Folder',
-        //     open: false
-        // });
+        // Folder example
+        gui.Register({
+            type: 'folder',
+            label: 'Known Bugs',
+            open: false
+        });
 
-        // // Add to the folder example
-        // gui.Register([
-        //     { type: 'range', label: 'Range', min: 0, max: 20, step: 1 },
-        //     { type: 'title', label: 'Title' },
-        //     { type: 'button', label: 'Button' },
-        //     { type: 'checkbox', label: 'Checkbox' },
-        //     { type: 'select', label: 'Select', options: ["Option A", "Option B"] },
-        //     { type: 'text', label: 'Text', initial: 'Some text' },
-        //     { type: 'color', label: 'Color' },
-        // ], {
-        //         folder: 'Folder'
-        //     });
+        var displayValue = "When two timecubes are in the exact same position, start time and end time, Mesh ceases to be removed.";
+        gui.Register({
+            type: 'display',
+            label: 'Deletion Bug',
+            object: this,
+            property: 'displayValue',
+            folder: 'Known Bugs'
+        })
 
-        // gui.Register({
-        //     type: 'text',
-        //     label: 'long long long long long long long long label',
-        //     folder: 'Folder',
-        // })
-
-        // // Add a nested folder
-        // gui.Register({ type: 'folder', label: 'Nested Folder', folder: 'Folder', open: false });
-        // gui.Register({ type: 'text', label: 'Folder Text', folder: 'Nested Folder', initial: 'Nested text' });
 
         // // Debug folder
         // gui.Register({
