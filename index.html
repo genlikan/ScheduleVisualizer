@@ -13,7 +13,7 @@
         background-repeat: no-repeat;
         background-size: 100% 100%;
       }
-        #fake-container {
+        #guify {
             max-width: 300px;
             max-height: 300px;
             width: 80vw;
@@ -40,13 +40,9 @@
               transition: opacity 0.25s linear;
               border-radius: 3px;
             }
-
-
     </style>
-
-    <div id="fake-container"></div>
+    <div id="guify"></div>
     <div id="tooltip"></div>
-
     <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
     <script src="https://threejs.org/build/three.js" type="text/javascript"></script>
     <script src="https://stemkoski.github.io/Three.js/js/Stats.js"></script>
@@ -54,13 +50,9 @@
     <script src="fonts/white_smith_regular.json"></script>
     <script src='lib/guify.js'></script>
     <script src="activity.js"></script>
-
     <script>
-
-      var scene, camera, renderer, ambientLight, light, controls;
-      var floor;
+      var scene, camera, renderer, ambientLight, light, controls, floor;
       var tooltipEnabledObjects = [];
-
       var Monday_Activity_Array = [],
       Tuesday_Activity_Array = [],
       Wednesday_Activity_Array = [],
@@ -68,7 +60,6 @@
       Friday_Activity_Array = [],
       Saturday_Activity_Array = [],
       Sunday_Activity_Array = [];
-
       var Activity_Array = [
                         Monday_Activity_Array, 
                         Tuesday_Activity_Array, 
@@ -78,41 +69,27 @@
                         Saturday_Activity_Array, 
                         Sunday_Activity_Array
                         ];
-
-      // standard global variables
         var container, stats;
-        var clock = new THREE.Clock();
-      
-      // custom global variables
         var mouse = new THREE.Vector2();
         var sprite1;
         var canvas1, context1, texture1;
 
       window.onload = function() {
-
         scene = new THREE.Scene();
-
         var fov = 80;
         var ratio = window.innerWidth / window.innerHeight;
         var zNear = 1;
         var zFar = 10000;
         camera = new THREE.PerspectiveCamera(fov, ratio, zNear, zFar);
-
-        // camera.position.set( 0, 1600, 1400);
         camera.position.set( 0, 1000, 500);
-
-
         renderer = new THREE.WebGLRenderer({ alpha: true });
         renderer.setSize( window.innerWidth, window.innerHeight );
         document.body.appendChild( renderer.domElement );
-        
         ambientLight = new THREE.AmbientLight();
         scene.add( ambientLight );
-
         light = new THREE.DirectionalLight( 0xffffff, 5.0 );
         light.position.set( 10, 100, 10 );
         scene.add( light );
-
         var floorTexture = new THREE.TextureLoader().load( 'marble.jpg' );
         var floorGeometry = new THREE.PlaneBufferGeometry( 2000, 1000 );
         var floorMaterial = new THREE.MeshBasicMaterial( {
@@ -126,12 +103,9 @@
         scene.add( floor );
 
         controls = new THREE.OrbitControls( camera, renderer.domElement );
-        // controls = new THREE.TrackballControls( camera, renderer.domElement );
         controls.rotateSpeed = 0.5;
 
-        //
         raycaster = new THREE.Raycaster();
-        //
 
         ///////////
         // Stats //
@@ -143,14 +117,9 @@
         stats.domElement.style.right = '0px';
         stats.domElement.style.zIndex = 100;
         container.appendChild( stats.domElement );
-
-        ////////////////////////////////////////
-
-
+        
         var initial_text_pos = [-800, 31, 100];
-
         var days = [0,1,2,3,4,5,6];
-
         days_name = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
 
         var loader = new THREE.FontLoader();
@@ -159,7 +128,6 @@
         for (var i = 0; i < days_name.length; i++) {
 
           var day_Text = new THREE.TextGeometry( days_name[i] , {
-
             font: font,
             size: 40,
             height: 10,
@@ -167,50 +135,30 @@
             bevelThickness: 1,
             bevelSize: 1,
             bevelEnabled: true
-
           });
-
           var textMaterial = new THREE.MeshPhongMaterial( 
             { color: 0x010047, specular: 0xffffff }
           );
-
           // RANDOM TEXT COLOR
           // var textMaterial = new THREE.MeshPhongMaterial( 
           //   { color: '#'+Math.floor(Math.random()*16777215).toString(16), specular: 0xffffff }
           // );
-
           var mesh = new THREE.Mesh( day_Text, textMaterial );
           mesh.position.set(initial_text_pos[0]+250*i , initial_text_pos[1] , initial_text_pos[2] );
           mesh.rotation.x = 100;
           scene.add( mesh );
-
           };
-
         });
-
         day_pos = [-710, -460, -210, 40, 290, 540, 790];
-
-        
-        // for (var i = 0; i < day_pos.length; i++) {
-
-        //     thisday = new Activity(days_name[i], day_pos[i], days_name[i], 60, null, null, null);
-
-        //     tooltipEnabledObjects.push(thisday.currentMesh);
-
-        // };
-
         
         // TOOLTIP START
         //
         //
-
         var latestMouseProjection; // this is the latest projection of the mouse on object (i.e. intersection with ray)
         var hoveredObj; // this objects is hovered at the moment
-
         // tooltip will not appear immediately. If object was hovered shortly,
         // - the timer will be canceled and tooltip will not appear at all.
         var tooltipDisplayTimeout;
-
         // This will move tooltip to the current mouse position and show it by timer.
         function showTooltip() {
           var divElement = $("#tooltip");
@@ -220,26 +168,17 @@
               display: "block",
               opacity: 0.0
             });
-
             var canvasHalfWidth = renderer.domElement.offsetWidth / 2;
             var canvasHalfHeight = renderer.domElement.offsetHeight / 2;
-
             var tooltipPosition = latestMouseProjection.clone().project(camera);
             tooltipPosition.x = (tooltipPosition.x * canvasHalfWidth) + canvasHalfWidth + renderer.domElement.offsetLeft;
             tooltipPosition.y = -(tooltipPosition.y * canvasHalfHeight) + canvasHalfHeight + renderer.domElement.offsetTop;
-
             var tootipWidth = divElement[0].offsetWidth;
             var tootipHeight = divElement[0].offsetHeight;
-
             divElement.css({
               left: `${tooltipPosition.x - tootipWidth/2}px`,
               top: `${tooltipPosition.y - tootipHeight - 5}px`
             });
-
-        // var position = new THREE.Vector3();
-        // var quaternion = new THREE.Quaternion();
-        // var scale = new THREE.Vector3();
-        // hoveredObj.matrix.decompose(position, quaternion, scale);
         divElement.text(hoveredObj.userData.tooltipText);
 
         setTimeout(function() {
@@ -249,7 +188,6 @@
         }, 25);
           }
         }
-
         // This will immediately hide tooltip.
         function hideTooltip() {
           var divElement = $("#tooltip");
@@ -259,7 +197,6 @@
             });
           }
         }
-
     // Following two functions will convert mouse coordinates
     // from screen to three.js system (where [0,0] is in the middle of the screen)
     function updateMouseCoords(event, coordsObj) {
@@ -300,14 +237,9 @@
     }
 
     window.addEventListener('mousemove', onMouseMove, false);
-
         //
         //
         // TOOLTIP END
-
-        
-
-        // Onclick and Raycaster using "floor"
         renderer.domElement.onclick = function( event ){
 
             if (!event.shiftKey) {
@@ -318,45 +250,33 @@
           var mouse3D = new THREE.Vector3( ( event.clientX / window.innerWidth ) * 2 - 1,   
                                     -( event.clientY / window.innerHeight ) * 2 + 1,  
                                     0.5 );     
-            var raycaster_2 =  new THREE.Raycaster();                                        
+            var raycaster_2 =  new THREE.Raycaster();
            raycaster_2.setFromCamera( mouse3D, camera );
             var intersects_2 = raycaster_2.intersectObjects( scene.children );
-
-            // var intersects_2 = raycaster_2.intersectObjects( tooltipEnabledObjects );
-
-            console.log("intersects_2: " + intersects_2);
-
+            // console.log("intersects_2: " + intersects_2);
             if ( intersects_2.length > 0 ) {
-                // intersects[ 0 ].object.material.color.setHex( Math.random() * 0xffffff );
-                console.log( "//////////INSIDE SHIFT + CLICK///////////" );
-
-                console.log(intersects_2);
-
-                console.log( intersects_2[0] );
-                console.log( intersects_2[0].object );
-                console.log( intersects_2[0].object.userData.Day );
-                console.log( intersects_2[0].object.userData.Start );
-                console.log( intersects_2[0].object.userData.End );
-
+                // console.log( "//////////INSIDE SHIFT + CLICK///////////" );
+                // console.log(intersects_2);
+                // console.log( intersects_2[0] );
+                // console.log( intersects_2[0].object );
+                // console.log( intersects_2[0].object.userData.Day );
+                // console.log( intersects_2[0].object.userData.Start );
+                // console.log( intersects_2[0].object.userData.End );
                 var intersected_day = intersects_2[0].object.userData.Day;
                 var day_start = intersects_2[0].object.userData.Start;
                 var day_end = intersects_2[0].object.userData.End;
                 var intersected_mesh = intersects_2[ 0 ].object;
                 var intersected_day_index = days_name.indexOf(intersected_day);
-
-                console.log("tooltipEnabledObjects : " + tooltipEnabledObjects);
-                console.log("intersected_mesh : " + intersected_mesh);
-
+                // console.log("tooltipEnabledObjects : " + tooltipEnabledObjects);
+                // console.log("intersected_mesh : " + intersected_mesh);
                 tooltipEnabledObjects.pop(intersected_mesh);
-
-                console.log( "intersects_2[0].object : " + intersects_2[0].object );
+                // console.log( "intersects_2[0].object : " + intersects_2[0].object );
     
-                    
                     for (var j = 0; j < Activity_Array[intersected_day_index].length; j++) {
 
                         if (Activity_Array[intersected_day_index][j].start_time == day_start && Activity_Array[intersected_day_index][j].end_time == day_end) {
 
-                            console.log("//OMG ITS THE SAME//");
+                            // console.log("//OMG ITS THE SAME//");
 
                             // tooltipEnabledObjects.pop(Activity_Array[intersected_day_index][j].currentMesh);
 
@@ -366,13 +286,10 @@
 
                             return gui.Toast("Removed.");
                         }
-
                     }
-
-
             }
             
-            console.log("///Triggered///");
+            // console.log("///Triggered///");
 
           };
 
@@ -381,14 +298,11 @@
 
       
       function animate() {
-
         requestAnimationFrame( animate );
         controls.update();
         stats.update();
         // r.onAnimate();
         renderer.render( scene , camera );
-        
-
       };
 
 
@@ -396,11 +310,7 @@
     
 
         <script>
-
-
-        var container = document.getElementById("fake-container");
-        console.log(this);
-
+        var container = document.getElementById("guify");
         // Create the GUI
         var gui = new guify({
             title: 'Scheduler',
@@ -413,9 +323,7 @@
             root: container,
             open: true
         });
-
         // Populate the GUI
-
         gui.Register({
             type: 'title',
             label: 'New Activity'
@@ -430,14 +338,13 @@
             property: 'day_Selection',
             options: ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
             onChange: (data) => {
-                console.log(day_Selection);
+                // console.log(day_Selection);
                 
                 Chosen_Time = day_pos[days_name.indexOf(day_Selection)];
-                console.log(days_name.indexOf(day_Selection));
-                console.log(Chosen_Time);
+                // console.log(days_name.indexOf(day_Selection));
+                // console.log(Chosen_Time);
             }
         })
-
         var actdesc_Text = 'Add Description Here';
         gui.Register({
             type: 'text',
@@ -445,10 +352,9 @@
             object: this,
             property: 'actdesc_Text',
             onChange: (data) => {
-                console.log(actdesc_Text);
+                // console.log(actdesc_Text);
             }
         })
-
         var duration = [], i, j;
         for(i=0; i<24; i++) {
           for(j=0; j<4; j++) {
@@ -457,8 +363,7 @@
         };
 
         duration.push(24 + ":" + "00");
-
-        console.log(duration);
+        // console.log(duration);
 
         var duration_start_Selection = '0:00';
         gui.Register({
@@ -468,7 +373,7 @@
             property: 'duration_start_Selection',
             options: duration,
             onChange: (data) => {
-                console.log(duration_start_Selection);
+                // console.log(duration_start_Selection);
             }
         })
 
@@ -480,18 +385,9 @@
             property: 'duration_end_Selection',
             options: duration,
             onChange: (data) => {
-                console.log(duration_end_Selection);
+                // console.log(duration_end_Selection);
             }
-        })        
-
-        // var rgbColor = 'rgb(255, 0, 0)';
-        // gui.Register({
-        //     type: 'color',
-        //     label: 'RGB Color',
-        //     format: 'rgb',
-        //     object: this,
-        //     property: 'rgbColor'
-        // })
+        })
 
         var hexColor = '#00FF00';
         gui.Register({
@@ -502,13 +398,11 @@
             property: 'hexColor'
         })
 
-        
-
         gui.Register({
             type: 'button',
             label: 'Add Activity',
             action: () => {
-                console.log('Clicked');
+                // console.log('Clicked');
                 // console.log(duration_start_Selection - duration_end_Selection);
 
                 var dur_start = duration_start_Selection;   // your input string
@@ -534,37 +428,23 @@
                       return gui.Toast("(AKA an Error has Occured.)");
                 }
 
-                console.log('Start Duration: ' + start_minutes);
-                console.log('End Duration: ' + end_minutes);
-                console.log(total_minutes);
-
-                console.log("Chosen_Time: " + Chosen_Time);
-                console.log("actdesc_Text: " + actdesc_Text);
-                console.log("total_minutes: " + total_minutes);
-                console.log("hexColor: " + hexColor);
-
-                console.log("///////////////////////");
+                // console.log('Start Duration: ' + start_minutes);
+                // console.log('End Duration: ' + end_minutes);
+                // console.log(total_minutes);
+                // console.log("Chosen_Time: " + Chosen_Time);
+                // console.log("actdesc_Text: " + actdesc_Text);
+                // console.log("total_minutes: " + total_minutes);
+                // console.log("hexColor: " + hexColor);
+                // console.log("///////////////////////");
 
                 new_activity = new Activity(day_Selection, Chosen_Time, actdesc_Text, total_minutes, start_minutes, end_minutes, hexColor);
-
-
-                //which day to shove in which array
-                
-
-
-                // Select Day to check
-                // Check for intersection
-                // console.log("////THIS IS HERE SECOND////");
-                // console.log(Activity_Array[days_name.indexOf(day_Selection)].length);
-
-                // console.log(Activity_Array[days_name.indexOf(day_Selection)].length == 0);
 
                 Activity_Array[days_name.indexOf(day_Selection)].push(new_activity);
             
 
                 for (var j = 0; j < Activity_Array[days_name.indexOf(day_Selection)].length; j++) {
 
-                        console.log( "//////////INSIDE FOR LOOP///////////" );
+                        // console.log( "//////////INSIDE FOR LOOP///////////" );
 
                         if (((Activity_Array[days_name.indexOf(day_Selection)][j].start_time < new_activity.start_time) && (new_activity.start_time < Activity_Array[days_name.indexOf(day_Selection)][j].end_time)) 
                             ||
@@ -575,7 +455,7 @@
                              ((Activity_Array[days_name.indexOf(day_Selection)][j].start_time > new_activity.start_time) && (new_activity.end_time >= Activity_Array[days_name.indexOf(day_Selection)][j].end_time))
                              ) {
 
-                            console.log( "//////////INSIDE INTERSECTION///////////" );
+                            // console.log( "//////////INSIDE INTERSECTION///////////" );
 
                             new_activity.removeActivity();
 
@@ -583,17 +463,10 @@
 
                             return gui.Toast("There appears to be an overlap/intersection.");
                         }
-
-
                     }
-
-                
                 tooltipEnabledObjects.push(new_activity.currentMesh);
-
-
             }
         })
-
         var ShowFPS = true;
         gui.Register({
             type: 'checkbox',
@@ -611,18 +484,6 @@
             }
         })
 
-
-        // var file = null;
-        // gui.Register({
-        //     type: 'file',
-        //     label: 'File',
-        //     object: this,
-        //     property: 'file',
-        //     onChange: (data) => {
-        //         console.log(data);
-        //     }
-        // })
-
         var displayValue = "Hold Shift key and Click to Delete.";
         gui.Register({
             type: 'display',
@@ -634,7 +495,7 @@
         // Folder example
         gui.Register({
             type: 'folder',
-            label: 'Known Bugs',
+            label: 'Known Bugs and Issues',
             open: false
         });
 
@@ -644,60 +505,8 @@
             label: 'Deletion Bug',
             object: this,
             property: 'displayValue',
-            folder: 'Known Bugs'
+            folder: 'Known Bugs and Issues'
         })
-
-
-        // // Debug folder
-        // gui.Register({
-        //     type: 'folder',
-        //     label: 'Debug',
-        //     open: false
-        // })
-
-        // gui.Register({
-        //     type: 'button',
-        //     label: 'Toast Test',
-        //     folder: 'Debug',
-        //     action: () => {
-        //         // Send a toast
-        //         gui.Toast('Test Toast');
-        //     },
-        // })
-
-        // gui.Register({
-        //     type: 'button',
-        //     label: 'Randomize Components',
-        //     folder: 'Debug',
-        //     action: () => {
-        //         // Randomize all the values bound to components in this example.
-        //         // Good test for whether component binding is actually working.
-        //         someNumber = Math.random() * 10;
-        //         steppedNumber = ~~((Math.random() + 0.1) * 8) * 8;
-        //         logNumber = Math.random() * 99 + 0.1;
-        //         checkboxTest = !checkboxTest;
-
-        //         testText = (Math.random() + 1).toString(36).substring(7); // Random string
-        //         rgbColor = 'rgb(' + Math.random() * 255 + ', 0, 0)';
-        //         hexColor = "#";
-        //         for (var i = 0; i < 6; i++) hexColor += Math.floor(Math.random() * 9).toString()
-
-        //         testSelection = "Option " + (Math.random() < 0.5 ? "1" : "2");
-        //     }
-        // })
-
-        // // This button gets automatically removed by our API
-        // var removedButton = gui.Register({
-        //     type: 'button',
-        //     label: 'Button',
-        //     action: () => {
-        //         console.log('Clicked');
-        //     }
-        // })
-        // removedButton.container.disabled = true;
-        // gui.Remove(removedButton);
-
-
 
     </script>
   </head>
