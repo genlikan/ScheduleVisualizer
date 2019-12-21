@@ -117,7 +117,7 @@
         stats.domElement.style.right = '0px';
         stats.domElement.style.zIndex = 100;
         container.appendChild( stats.domElement );
-        
+
         var initial_text_pos = [-800, 31, 100];
         var days = [0,1,2,3,4,5,6];
         days_name = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
@@ -339,7 +339,6 @@
             options: ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
             onChange: (data) => {
                 // console.log(day_Selection);
-                
                 Chosen_Time = day_pos[days_name.indexOf(day_Selection)];
                 // console.log(days_name.indexOf(day_Selection));
                 // console.log(Chosen_Time);
@@ -454,9 +453,7 @@
                              ||
                              ((Activity_Array[days_name.indexOf(day_Selection)][j].start_time > new_activity.start_time) && (new_activity.end_time >= Activity_Array[days_name.indexOf(day_Selection)][j].end_time))
                              ) {
-
                             // console.log( "//////////INSIDE INTERSECTION///////////" );
-
                             new_activity.removeActivity();
 
                             Activity_Array[days_name.indexOf(day_Selection)].pop();
@@ -503,6 +500,15 @@
         gui.Register({
             type: 'display',
             label: 'Deletion Bug',
+            object: this,
+            property: 'displayValue',
+            folder: 'Known Bugs and Issues'
+        })
+
+        var displayValue = "white_smith_regular.json converted with an unexpected token, appears to still function seemlessly.";
+        gui.Register({
+            type: 'display',
+            label: 'Uncaught SyntaxError',
             object: this,
             property: 'displayValue',
             folder: 'Known Bugs and Issues'
